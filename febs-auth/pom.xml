@@ -6,7 +6,7 @@
         <groupId>cc.mrbird</groupId>
         <artifactId>febs-cloud</artifactId>
         <version>1.4-RELEASE</version>
-        <relativePath>../febs-cloud/pom.xml</relativePath>
+        <relativePath>../febs-cloud/pom.xml</relativePath> <!--这里父子模块不是嵌套创建的，而是通过相对路径指定-->
     </parent>
 
     <artifactId>febs-auth</artifactId>

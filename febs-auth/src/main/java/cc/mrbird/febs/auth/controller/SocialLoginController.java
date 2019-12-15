@@ -41,6 +41,8 @@ public class SocialLoginController {
     @Value("${febs.frontUrl}")
     private String frontUrl;
 
+
+    //https://apicloud.mrbird.cn:8301/auth/social/login/github/login
     /**
      * 登录
      *

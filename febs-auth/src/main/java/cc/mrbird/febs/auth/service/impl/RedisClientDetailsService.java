@@ -33,11 +33,13 @@ public class RedisClientDetailsService extends JdbcClientDetailsService {
         super(dataSource);
     }
 
+    //查询client信息
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws InvalidClientException {
         ClientDetails clientDetails = null;
         String value = (String) redisService.hget(CACHE_CLIENT_KEY, clientId);
         if (StringUtils.isBlank(value)) {
+            //先在redis中进行查询，再到jdbc中进行查询，(包装者模式)
             clientDetails = cacheAndGetClient(clientId);
         } else {
             clientDetails = JSONObject.parseObject(value, BaseClientDetails.class);
@@ -83,6 +85,8 @@ public class RedisClientDetailsService extends JdbcClientDetailsService {
             log.error("oauth_client_details表数据为空，请检查");
             return;
         }
+
+        //TODO 这里可以使用管道进行改进 Pipline
         list.forEach(client -> redisService.hset(CACHE_CLIENT_KEY, client.getClientId(), JSONObject.toJSONString(client)));
     }
 }

@@ -44,6 +44,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
         String header = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
         String clientId = getClientId(header, httpServletRequest);
 
+        //todo 请求匹配
         RequestMatcher matcher = new AntPathRequestMatcher(EndpointConstant.OAUTH_TOKEN, HttpMethod.POST.toString());
         if (matcher.matches(httpServletRequest)
                 && StringUtils.equalsIgnoreCase(httpServletRequest.getParameter(ParamsConstant.GRANT_TYPE), GrantTypeConstant.PASSWORD)
