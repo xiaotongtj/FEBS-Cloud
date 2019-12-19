@@ -89,6 +89,7 @@ public class EximportController {
         if (CollectionUtils.isNotEmpty(data)) {
             this.eximportService.batchInsert(data);
         }
+        //用不可变类
         ImmutableMap<String, Object> result = ImmutableMap.of(
                 "time", stopwatch.stop().toString(),
                 "data", data,

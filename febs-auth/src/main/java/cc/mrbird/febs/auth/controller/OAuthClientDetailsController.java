@@ -26,6 +26,10 @@ import java.util.Map;
 @RequestMapping("client")
 public class OAuthClientDetailsController {
 
+    /**
+     * client信息以jdbc方式进行存储的
+     * 并添加缓存的方式
+     */
     @Autowired
     private OAuthClientDetailsService oAuthClientDetailsService;
 
@@ -51,6 +55,7 @@ public class OAuthClientDetailsController {
     }
 
 
+    //创建clientDetail
     @PostMapping
     @PreAuthorize("hasAuthority('client:add')")
     public void addOauthCliendetails(@Valid OAuthClientDetails oAuthClientDetails) throws FebsException {

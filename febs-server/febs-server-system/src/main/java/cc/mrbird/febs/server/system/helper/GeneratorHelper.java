@@ -97,7 +97,7 @@ public class GeneratorHelper {
     @SuppressWarnings("all")
     private void generateFileByTemplate(String templateName, File file, Object data) throws Exception {
         Template template = getTemplate(templateName);
-        Files.createParentDirs(file);
+        Files.createParentDirs(file);//创建父文件
         FileOutputStream fileOutputStream = new FileOutputStream(file);
         try (Writer out = new BufferedWriter(new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8), 10240)) {
             template.process(data, out);
@@ -133,6 +133,7 @@ public class GeneratorHelper {
         if (!file.exists()) {
             templatePath = System.getProperties().getProperty(FebsConstant.JAVA_TEMP_DIR);
             file = new File(templatePath + File.separator + templateName);
+            //IO流，文件——>流——>文件
             FileUtils.copyInputStreamToFile(Objects.requireNonNull(AddressUtil.class.getClassLoader().getResourceAsStream("classpath:generator/templates/" + templateName)), file);
         }
         configuration.setDirectoryForTemplateLoading(new File(templatePath));

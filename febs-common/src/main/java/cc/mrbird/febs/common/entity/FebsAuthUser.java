@@ -11,6 +11,8 @@ import java.util.Date;
 /**
  * @author MrBird
  */
+
+//这里继承了User-->UserDetail
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class FebsAuthUser extends User {

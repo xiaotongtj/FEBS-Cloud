@@ -20,6 +20,8 @@
             <artifactId>febs-common</artifactId>
             <version>1.4-RELEASE</version>
         </dependency>
+
+        <!--mysqlPlus 依赖-->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
@@ -30,6 +32,8 @@
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        <!--验证码依赖-->
         <dependency>
             <groupId>com.github.whvcse</groupId>
             <artifactId>easy-captcha</artifactId>
@@ -39,6 +43,8 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
         </dependency>
+
+        <!--logback追加到logStash-->
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
@@ -48,6 +54,8 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
+
+        <!--justAuth进行第三方的认证-->
         <dependency>
             <groupId>com.xkcoding</groupId>
             <artifactId>justauth-spring-boot-starter</artifactId>

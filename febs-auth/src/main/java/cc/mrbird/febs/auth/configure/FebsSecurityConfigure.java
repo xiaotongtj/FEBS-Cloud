@@ -37,6 +37,7 @@ public class FebsSecurityConfigure extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        //在认证的前面添加验证码的验证过滤器
         http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
                 .requestMatchers()
                 .antMatchers(EndpointConstant.OAUTH_ALL)
@@ -47,6 +48,7 @@ public class FebsSecurityConfigure extends WebSecurityConfigurerAdapter {
                 .csrf().disable();
     }
 
+    //用户名和密码的认证
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder);

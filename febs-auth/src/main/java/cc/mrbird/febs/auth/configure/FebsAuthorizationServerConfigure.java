@@ -37,16 +37,21 @@ import java.util.UUID;
 @EnableAuthorizationServer
 public class FebsAuthorizationServerConfigure extends AuthorizationServerConfigurerAdapter {
 
+    //自带的-->provider
     @Autowired
     private AuthenticationManager authenticationManager;
+    //用户信息
     @Autowired
     private FebsUserDetailService userDetailService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    //异常翻译类
     @Autowired
     private FebsWebResponseExceptionTranslator exceptionTranslator;
     @Autowired
     private FebsAuthProperties properties;
+    //通过继承JDBC的存储方式进行扩展redis
+    //客户端信息
     @Autowired
     private RedisClientDetailsService redisClientDetailsService;
     @Autowired
@@ -55,7 +60,7 @@ public class FebsAuthorizationServerConfigure extends AuthorizationServerConfigu
     //ClientDetailsServiceConfigurer 能够使用内存或 JDBC 方式实现【获取已注册的客户端详情】
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        //这里是基于JDBC-->redis来实现客户端的信息查询
+        //这里是基于JDBC-->redis来实现客户端的信息查询(客户端持久化的方式)
         clients.withClientDetails(redisClientDetailsService);
     }
 
@@ -63,17 +68,16 @@ public class FebsAuthorizationServerConfigure extends AuthorizationServerConfigu
 
     /**
      * 配置授权服务器端点，如令牌存储，令牌自定义，用户批准和授权类型，不包括端点安全配置
-     *
-     *
+     * <p>
+     * <p>
      * 下面是一些默认的端点 URL：
-     *
+     * <p>
      * /oauth/authorize：授权端点
      * /oauth/token：令牌端点
      * /oauth/confirm_access：用户确认授权提交端点
      * /oauth/error：授权服务错误信息端点
      * /oauth/check_token：用于资源服务访问的令牌解析端点
      * /oauth/token_key：提供公有密匙的端点，如果你使用JWT令牌的话
-     *
      */
     @Override
     @SuppressWarnings("unchecked")
@@ -95,7 +99,7 @@ public class FebsAuthorizationServerConfigure extends AuthorizationServerConfigu
     @Bean
     public TokenStore tokenStore() {
         if (properties.getEnableJwt()) {
-            //使用jwt方式进行存储
+            //使用jwt方式进行存储 + 生成令牌
             /**
              * jwt 验证通过使用 userDetailService返回用户新
              */
@@ -128,7 +132,6 @@ public class FebsAuthorizationServerConfigure extends AuthorizationServerConfigu
      * 可用于自定义令牌策略，在令牌被 AuthorizationServerTokenServices 的实现存储之前增强令牌的策略，它有两个实现类：
      * JwtAccessTokenConverter：用于令牌 JWT 编码与解码
      * TokenEnhancerChain：一个令牌链，可以存放多个令牌，并循环的遍历令牌并将结果传递给下一个令牌
-     *
      */
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
@@ -136,6 +139,7 @@ public class FebsAuthorizationServerConfigure extends AuthorizationServerConfigu
         DefaultAccessTokenConverter defaultAccessTokenConverter = (DefaultAccessTokenConverter) accessTokenConverter.getAccessTokenConverter();
         DefaultUserAuthenticationConverter userAuthenticationConverter = new DefaultUserAuthenticationConverter();
 
+        //jwt的用户信息也是从UserDetailService中记性你获取的
         userAuthenticationConverter.setUserDetailsService(userDetailService);
         defaultAccessTokenConverter.setUserTokenConverter(userAuthenticationConverter);
 
@@ -143,9 +147,10 @@ public class FebsAuthorizationServerConfigure extends AuthorizationServerConfigu
         return accessTokenConverter;
     }
 
-    //认证服务和资源服务的一个过渡类
+    //todo 认证服务和资源服务的一个过渡类
     @Bean
     public ResourceOwnerPasswordTokenGranter resourceOwnerPasswordTokenGranter(AuthenticationManager authenticationManager, OAuth2RequestFactory oAuth2RequestFactory) {
+        //
         DefaultTokenServices defaultTokenServices = defaultTokenServices();
         if (properties.getEnableJwt()) {
             defaultTokenServices.setTokenEnhancer(jwtAccessTokenConverter());

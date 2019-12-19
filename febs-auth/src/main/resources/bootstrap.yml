@@ -5,12 +5,12 @@ spring:
     active: dev
   cloud:
     nacos:
-      config:
+      config: #nacos配置中心
         server-addr: ${nacos.url}:8001
         group: DEFAULT_GROUP
         prefix: febs-auth
         file-extension: yaml
-      discovery:
+      discovery: #nacos注册中心
         server-addr: ${nacos.url}:8001
 
 logging:

@@ -34,15 +34,18 @@ public class FebsUserDetailService implements UserDetailsService {
         HttpServletRequest httpServletRequest = HttpContextUtil.getHttpServletRequest();
         SystemUser systemUser = userManager.findByName(username);
         if (systemUser != null) {
+            //查询用户权限-->@PreAuthorize("hasAuthority('user:reset')")
             String permissions = userManager.findUserPermissions(systemUser.getUsername());
             boolean notLocked = false;
             if (StringUtils.equals(SystemUser.STATUS_VALID, systemUser.getStatus()))
                 notLocked = true;
             String password = systemUser.getPassword();
+            //判断登录类型是social登录(第三方登录)
             String loginType = (String) httpServletRequest.getAttribute(ParamsConstant.LOGIN_TYPE);
             if (StringUtils.equals(loginType, SocialConstant.SOCIAL_LOGIN)) {
                 password = passwordEncoder.encode(SocialConstant.SOCIAL_LOGIN_PASSWORD);
             }
+            //汇总用户的权限
             FebsAuthUser authUser = new FebsAuthUser(systemUser.getUsername(), password, true, true, true, notLocked,
                     AuthorityUtils.commaSeparatedStringToAuthorityList(permissions));
 

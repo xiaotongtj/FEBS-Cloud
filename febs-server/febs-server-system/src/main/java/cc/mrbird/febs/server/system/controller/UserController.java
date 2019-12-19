@@ -41,6 +41,7 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    //https://apicloud.mrbird.cn:8301/system/user/success/1245
     @GetMapping("success/{username}")
     public void loginSuccess(@NotBlank(message = "{required}") @PathVariable String username, HttpServletRequest request) {
         // update last login time
@@ -52,6 +53,7 @@ public class UserController {
         this.loginLogService.saveLoginLog(loginLog);
     }
 
+    //https://apicloud.mrbird.cn:8301/system/user/index/1245
     @GetMapping("index/{username}")
     public FebsResponse index(@NotBlank(message = "{required}") @PathVariable String username) {
         Map<String, Object> data = new HashMap<>();
@@ -72,7 +74,7 @@ public class UserController {
         return new FebsResponse().data(data);
     }
 
-
+    //
     @GetMapping
     @PreAuthorize("hasAuthority('user:view')")
     public FebsResponse userList(QueryRequest queryRequest, SystemUser user) {

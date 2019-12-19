@@ -85,6 +85,7 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements ILogS
         log.setMethod(className + "." + methodName + "()");
 
         Object[] args = point.getArgs();
+        //获取方法中的形参
         LocalVariableTableParameterNameDiscoverer u = new LocalVariableTableParameterNameDiscoverer();
         String[] paramNames = u.getParameterNames(method);
         if (args != null && paramNames != null) {

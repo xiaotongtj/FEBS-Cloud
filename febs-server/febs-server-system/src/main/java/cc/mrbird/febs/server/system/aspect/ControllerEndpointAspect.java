@@ -35,6 +35,7 @@ public class ControllerEndpointAspect extends AspectSupport {
     @Around("pointcut()")
     public Object around(ProceedingJoinPoint point) throws FebsException {
         Object result;
+        //可能是父类的方法
         Method targetMethod = resolveMethod(point);
         ControllerEndpoint annotation = targetMethod.getAnnotation(ControllerEndpoint.class);
         String operation = annotation.operation();
@@ -43,7 +44,9 @@ public class ControllerEndpointAspect extends AspectSupport {
             result = point.proceed();
             if (StringUtils.isNotBlank(operation)) {
                 HttpServletRequest request = HttpContextUtil.getHttpServletRequest();
+                //获取认证器
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                //获取用户名
                 String username = (String) authentication.getPrincipal();
                 logService.saveLog(point, targetMethod, request, operation, username, start);
             }

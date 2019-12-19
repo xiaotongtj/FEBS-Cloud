@@ -23,6 +23,7 @@ public class SecurityController {
     @Autowired
     private UserManager userManager;
 
+    //
     @GetMapping("user")
     public Principal currentUser(Principal principal) {
         return principal;

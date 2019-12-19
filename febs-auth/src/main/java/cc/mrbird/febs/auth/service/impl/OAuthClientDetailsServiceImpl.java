@@ -67,9 +67,11 @@ public class OAuthClientDetailsServiceImpl extends ServiceImpl<OAuthClientDetail
         }
         oauthClientDetails.setOriginSecret(oauthClientDetails.getClientSecret());
         oauthClientDetails.setClientSecret(passwordEncoder.encode(oauthClientDetails.getClientSecret()));
+        //这里用mybatisPlus进行存在客户端信息（自定义）
         boolean saved = this.save(oauthClientDetails);
         if (saved) {
             log.info("缓存Client -> {}", oauthClientDetails);
+            //巧妙的利用内置的jdbcTemplate查询自定义的的clientDetail，并存储到缓存中
             this.redisClientDetailsService.loadClientByClientId(oauthClientDetails.getClientId());
         }
     }

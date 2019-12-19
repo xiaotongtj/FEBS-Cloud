@@ -29,6 +29,7 @@ public class RedisClientDetailsService extends JdbcClientDetailsService {
     @Autowired
     RedisService redisService;
 
+    //todo jdbc中存储客户端信息注入dataSource(表结构和字段已经固定了)
     public RedisClientDetailsService(DataSource dataSource) {
         super(dataSource);
     }
