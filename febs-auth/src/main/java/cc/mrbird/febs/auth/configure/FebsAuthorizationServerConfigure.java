@@ -150,7 +150,7 @@ public class FebsAuthorizationServerConfigure extends AuthorizationServerConfigu
     //todo 认证服务和资源服务的一个过渡类
     @Bean
     public ResourceOwnerPasswordTokenGranter resourceOwnerPasswordTokenGranter(AuthenticationManager authenticationManager, OAuth2RequestFactory oAuth2RequestFactory) {
-        //
+        //token服务 TokenStore + ClientDetailsService 统一服务
         DefaultTokenServices defaultTokenServices = defaultTokenServices();
         if (properties.getEnableJwt()) {
             defaultTokenServices.setTokenEnhancer(jwtAccessTokenConverter());
@@ -158,6 +158,17 @@ public class FebsAuthorizationServerConfigure extends AuthorizationServerConfigu
         return new ResourceOwnerPasswordTokenGranter(authenticationManager, defaultTokenServices, redisClientDetailsService, oAuth2RequestFactory);
     }
 
+    /**
+     * AbstractTokenGranter
+     *
+     * AuthorizationCodeTokenGranter
+     * ImplicitTokenGranter
+     * ClientCredentialsTokenGranter
+     * ResourceOwnerPasswordTokenGranter
+     *
+     * RefreshTokenGranter
+     *
+     */
     @Bean
     public DefaultOAuth2RequestFactory oAuth2RequestFactory() {
         return new DefaultOAuth2RequestFactory(redisClientDetailsService);

@@ -90,6 +90,7 @@ public class SocialLoginServiceImpl implements SocialLoginService {
     public FebsResponse resolveLogin(String oauthType, AuthCallback callback) throws FebsException {
         FebsResponse febsResponse = new FebsResponse();
         AuthRequest authRequest = factory.get(getAuthSource(oauthType));
+        //第三方登录系统的信息
         AuthResponse<?> response = authRequest.login(resolveAuthCallback(callback));
         if (response.ok()) {
             AuthUser authUser = (AuthUser) response.getData();
@@ -98,11 +99,13 @@ public class SocialLoginServiceImpl implements SocialLoginService {
                 //这里应该是弹窗，提示绑定登录或者注册登录
                 febsResponse.message(NOT_BIND).data(authUser);
             } else {
+                //第三方登录系统用户名-->UserConnection-->系统用户(本系统)
                 SystemUser user = userManager.findByName(userConnection.getUserName());
                 if (user == null) {
                     throw new FebsException("系统中未找到与第三方账号对应的账户");
                 }
                 //这里返回后，就直接进入首页了
+                //返回的是本系统的access_token信息(3点)
                 OAuth2AccessToken oAuth2AccessToken = getOAuth2AccessToken(user);
                 febsResponse.message(SOCIAL_LOGIN_SUCCESS).data(oAuth2AccessToken);
                 febsResponse.put(USERNAME, user.getUsername());
@@ -219,12 +222,14 @@ public class SocialLoginServiceImpl implements SocialLoginService {
         return StringUtils.equalsIgnoreCase(username, authUser.getUsername());
     }
 
+    //内置的系统用户
     private OAuth2AccessToken getOAuth2AccessToken(SystemUser user) throws FebsException {
         final HttpServletRequest httpServletRequest = HttpContextUtil.getHttpServletRequest();
         httpServletRequest.setAttribute(ParamsConstant.LOGIN_TYPE, SocialConstant.SOCIAL_LOGIN);
         String socialLoginClientId = properties.getSocialLoginClientId();
         ClientDetails clientDetails = null;
         try {
+            //这里是微服务的概念，系统中有其他的子服务
             clientDetails = redisClientDetailsService.loadClientByClientId(socialLoginClientId);
         } catch (Exception e) {
             throw new FebsException("获取第三方登录可用的Client失败");
